@@ -1,6 +1,6 @@
 # How-to-add-columns-in-viewmodel-using-Prism-in-WPF Data Grid
 
-This sample demonstrates how to add and bind columns for the [WPF DataGrid](https://www.syncfusion.com/wpf-controls/datagrid) (SfDataGrid) from a ViewModel by using Prism.
+This sample demonstrates how to add and bind columns for the [WPF Data Grid](https://www.syncfusion.com/wpf-controls/datagrid) from a ViewModel by using Prism.
 
 In this example, the grid columns are created in the ViewModel and assigned to the `SfDataGrid.Columns` property. A custom `DataTemplate` is also used to show a button in a template column that calls a command to copy the `OrderID` value to the clipboard.
 
@@ -154,4 +154,4 @@ public class ViewModel : BindableBase
 
 ![Add Columns In ViewModel Using Prism](Add_Columns_In_ViewModel_Using_Prism.png)
 
-Take a moment to peruse the [WPF DataGrid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation to learn more about columns and examples.
+Take a moment to peruse the [WPF Data Grid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation to learn more about columns and examples.
