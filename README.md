@@ -1,6 +1,20 @@
-# How-to-add-columns-in-viewmodel-using-Prism-in-WPF-DataGrid
+# How-to-add-columns-in-viewmodel-using-Prism-in-WPF Data Grid
 
-In [WPF DataGrid](https://www.syncfusion.com/wpf-controls/datagrid) (SfDataGrid), [columns](https://help.syncfusion.com/cr/wpf/Syncfusion.UI.Xaml.Grid.Columns.html) are typically defined in XAML or added in the code-behind by default. However, you can also add columns dynamically from the ViewModel when using Prism. Prism’s command support can be used to handle interactions within the MVVM pattern. To use Prism, you need to install the Prism.Core package.
+In [WPF Data Grid](https://www.syncfusion.com/wpf-controls/datagrid), [columns](https://help.syncfusion.com/cr/wpf/Syncfusion.UI.Xaml.Grid.Columns.html) are typically defined in XAML or added at runtime. This example shows how to define and configure columns from the ViewModel when using Prism, keeping UI logic out of the code-behind.
+
+## Prerequisites
+
+- Visual Studio (2017+ recommended)
+- .NET Framework or .NET Core compatible with Syncfusion WPF controls
+- Syncfusion WPF controls (Data Grid)
+- Prism (for BindableBase and DelegateCommand usage)
+- Basic knowledge of MVVM pattern and data binding in WPF
+
+## What this sample demonstrates
+
+- Creating grid columns from the ViewModel (no code-behind column creation).
+- Using a DataTemplate parsed at runtime for template columns that include commands bound to the ViewModel.
+- Binding an ObservableCollection of data items to the Data Grid.
 
 **C#**
 ```
@@ -20,7 +34,7 @@ public class ViewModel : BindableBase
         set { SetProperty(ref _orders, value); }
     }
 
-    // Property for SfDataGrid columns
+    // Property for Data Grid columns
     public Columns SfGridColumns
     {
         get { return sfGridColumns; }
@@ -58,7 +72,7 @@ public class ViewModel : BindableBase
     }
 
     /// <summary>
-    /// Sets up the columns for the SfDataGrid.
+    /// Sets up the columns for the Data Grid.
     /// </summary>
     private void SetSfGridColumns()
     {
@@ -129,4 +143,17 @@ public class ViewModel : BindableBase
 
 ![Add Columns In ViewModel Using Prism](Add_Columns_In_ViewModel_Using_Prism.png)
 
-Take a moment to peruse the [WPF DataGrid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation, to learn more about columns with examples.
+## How to use
+
+1. Set the ViewModel as the DataContext of your view (e.g., via Prism view-model locator or manually).
+2. Bind your Data Grid columns collection to the ViewModel property containing the Columns instance (for example, `SfGridColumns`).
+3. Bind the ItemsSource of Data Grid to the `Orders` collection.
+4. Ensure the element name `sfGrid` (used in the template's ElementName binding) matches the name of your Data Grid control in XAML so the template can resolve DataContext commands on the grid's DataContext.
+
+## Notes and tips
+
+- Because templates are parsed at runtime (XamlReader.Parse), ensure any required XML namespaces are included inside the template string.
+- Keep ViewModel responsibilities focused on providing data and column metadata rather than UI logic; the template can still use commands defined in the ViewModel.
+- Test bindings thoroughly—ElementName bindings require correct naming and scope to resolve.
+
+Take a moment to peruse the [WPF Data Grid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation, to learn more about columns with examples.
