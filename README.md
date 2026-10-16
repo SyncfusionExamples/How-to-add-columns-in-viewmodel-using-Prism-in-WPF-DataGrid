@@ -1,39 +1,40 @@
 # How-to-add-columns-in-viewmodel-using-Prism-in-WPF Data Grid
 
-This sample demonstrates how to add and bind columns for the [WPF Data Grid](https://www.syncfusion.com/wpf-controls/datagrid) from a ViewModel by using Prism.
+In [WPF Data Grid](https://www.syncfusion.com/wpf-controls/datagrid), [columns](https://help.syncfusion.com/cr/wpf/Syncfusion.UI.Xaml.Grid.Columns.html) are typically defined in XAML or added at runtime. This example shows how to define and configure columns from the ViewModel when using Prism, keeping UI logic out of the code-behind.
 
-In this example, the grid columns are created in the ViewModel and assigned to the `SfDataGrid.Columns` property. A custom `DataTemplate` is also used to show a button in a template column that calls a command to copy the `OrderID` value to the clipboard.
+## Prerequisites
 
-## Features
+- Visual Studio (2017+ recommended)
+- .NET Framework or .NET Core compatible with Syncfusion WPF controls
+- Syncfusion WPF controls (Data Grid)
+- Prism (for BindableBase and DelegateCommand usage)
+- Basic knowledge of MVVM pattern and data binding in WPF
 
-- Define `Data Grid` columns in the ViewModel
-- Bind the columns collection to the grid using Prism `BindableBase`
-- Create custom template columns for interactive UI inside the grid
-- Populate the Data Grid using an `ObservableCollection`
+## What this sample demonstrates
 
-## Project structure
+- Creating grid columns from the ViewModel (no code-behind column creation).
+- Using a DataTemplate parsed at runtime for template columns that include commands bound to the ViewModel.
+- Binding an ObservableCollection of data items to the Data Grid.
 
-- `SfDataGridDemo` - WPF application
-- `SfDataGridDemo/MainWindow.xaml` - hosts the `Data Grid` and binds it to the ViewModel
-- `SfDataGridDemo/ViewModel/ViewModel.cs` - contains column creation logic and sample data generation
-- `SfDataGridDemo/Model/OrderInfo.cs` - model used for data binding
-
-## ViewModel implementation
-
-```csharp
+**C#**
+```
 public class ViewModel : BindableBase
 {
+    // Backing fields
     private ObservableCollection<OrderInfo> _orders;
     private Columns sfGridColumns;
 
+    // Command to copy
     public DelegateCommand<OrderInfo> CopyCommand { get; }
 
+    // Property for Orders collection
     public ObservableCollection<OrderInfo> Orders
     {
         get { return _orders; }
         set { SetProperty(ref _orders, value); }
     }
 
+    // Property for Data Grid columns
     public Columns SfGridColumns
     {
         get { return sfGridColumns; }
@@ -42,14 +43,20 @@ public class ViewModel : BindableBase
 
     public ViewModel()
     {
+        // Initialize the command with the method to execute
         CopyCommand = new DelegateCommand<OrderInfo>(CopyAccountNo);
 
+        // Set up the grid columns
         SetSfGridColumns();
 
+        // Generate sample data
         _orders = new ObservableCollection<OrderInfo>();
-        GenerateOrders();
+        this.GenerateOrders();
     }
 
+    /// <summary>
+    /// Generates sample order data.
+    /// </summary>
     private void GenerateOrders()
     {
         _orders.Add(new OrderInfo(1001, "Maria Anders", "Germany", "ALFKI", "Berlin"));
@@ -64,6 +71,9 @@ public class ViewModel : BindableBase
         _orders.Add(new OrderInfo(1010, "Elizabeth Lincoln", "Canada", "BOTTM", "Tsawassen"));
     }
 
+    /// <summary>
+    /// Sets up the columns for the Data Grid.
+    /// </summary>
     private void SetSfGridColumns()
     {
         string cellTemplateXaml =
@@ -117,41 +127,33 @@ public class ViewModel : BindableBase
         sfGridColumns = cols;
     }
 
+    /// <summary>
+    /// Copies the OrderID of the given order to the clipboard.
+    /// </summary>
+    /// <param name="orderID"></param>
     private void CopyAccountNo(OrderInfo orderID)
     {
         if (orderID == null || orderID.OrderID == null)
             return;
-
         var text = orderID.OrderID.ToString();
         Clipboard.SetText(text);
     }
 }
 ```
 
-## XAML binding
-
-```xml
-<Window.DataContext>
-    <local:ViewModel/>
-</Window.DataContext>
-
-<Grid>
-    <syncfusion:SfDataGrid x:Name="sfGrid"
-            AutoGenerateColumns="False"
-            Columns="{Binding SfGridColumns, Mode=TwoWay}"
-            ItemsSource="{Binding Orders}">
-    </syncfusion:SfDataGrid>
-</Grid>
-```
-
-## How to run this sample
-
-1. Open the `SfDataGridDemo/SfDataGridDemo.sln` file in Visual Studio.
-2. Restore the NuGet packages.
-3. Build and run the project.
-
-## Output
-
 ![Add Columns In ViewModel Using Prism](Add_Columns_In_ViewModel_Using_Prism.png)
 
-Take a moment to peruse the [WPF Data Grid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation to learn more about columns and examples.
+## How to use
+
+1. Set the ViewModel as the DataContext of your view (e.g., via Prism view-model locator or manually).
+2. Bind your Data Grid columns collection to the ViewModel property containing the Columns instance (for example, `SfGridColumns`).
+3. Bind the ItemsSource of Data Grid to the `Orders` collection.
+4. Ensure the element name `sfGrid` (used in the template's ElementName binding) matches the name of your Data Grid control in XAML so the template can resolve DataContext commands on the grid's DataContext.
+
+## Notes and tips
+
+- Because templates are parsed at runtime (XamlReader.Parse), ensure any required XML namespaces are included inside the template string.
+- Keep ViewModel responsibilities focused on providing data and column metadata rather than UI logic; the template can still use commands defined in the ViewModel.
+- Test bindings thoroughly—ElementName bindings require correct naming and scope to resolve.
+
+Take a moment to peruse the [WPF Data Grid - Columns](https://help.syncfusion.com/wpf/datagrid/columns) documentation, to learn more about columns with examples.
